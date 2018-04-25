@@ -2,7 +2,7 @@ const { assert } = require('chai');
 const request = require('./request');
 const { dropCollection } = require('./db');
 
-describe('Auth api', () => {
+describe.only('Auth api', () => {
     beforeEach(() => dropCollection('reviewers'));
 
     let token = null;
@@ -12,7 +12,9 @@ describe('Auth api', () => {
             .post('/api/auth/signup')
             .send({
                 email: 'me@me.com',
-                password: 'abc'
+                password: 'abc',
+                name: 'Bob',
+                company: 'NY times'
             })
             .then(({ body }) => token = body.token);
     });

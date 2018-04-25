@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const Reviewer = require('../../lib/models/Reviewer');
 
-describe.only('reviewer model', () => {
+describe('reviewer model', () => {
     it('reviewer is a valid model', () => {
         const data = {
             name: 'Roger Ebert',

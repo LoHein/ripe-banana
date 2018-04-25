@@ -3,7 +3,7 @@ const request = require('./request');
 const { dropCollection } = require('./db');
 const Reviewer = require('../../lib/models/Reviewer');
 
-describe.only('reviewer api', () => {
+describe('reviewer api', () => {
     before(() => dropCollection('reviewers'));
 
     let reviewerA = {
