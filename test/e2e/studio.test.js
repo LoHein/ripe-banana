@@ -6,6 +6,7 @@ const Film = require('../../lib/models/Film');
 
 describe('studio api', () => {
     before(() => dropCollection('studios'));
+    before(() => dropCollection('reviewers'));
 
     let token = '';
     before(() => createToken().then(t => token = t));
