@@ -1,11 +1,14 @@
 const { assert } = require('chai');
 const request = require('./request');
-const { dropCollection } = require('./db');
+const { dropCollection, createToken } = require('./db');
 const Studio = require('../../lib/models/Studio');
 const Film = require('../../lib/models/Film');
 
 describe('studio api', () => {
     before(() => dropCollection('studios'));
+
+    let token = '';
+    before(() => createToken().then(t => token = t));
 
     let studioA = {
         name: 'StudioA',
@@ -74,6 +77,7 @@ describe('studio api', () => {
         studioA.name = 'New name';
 
         return request.put(`/studios/${studioA._id}`)
+            .set('Authorization', token)
             .send(studioA)
             .then(({ body }) => {
                 assert.deepEqual(body, studioA);
