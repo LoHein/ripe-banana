@@ -31,4 +31,16 @@ describe.only('Auth api', () => {
                 assert.isOk(body.verified);
             });
     });
+
+    it('signin', () => {
+        return request
+            .post('/api/auth/signin')
+            .send({
+                email: 'me@me.com',
+                password: 'abc'
+            })
+            .then(({ body }) => {
+                assert.ok(body.token);
+            });
+    });
 });
