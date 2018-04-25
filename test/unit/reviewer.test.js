@@ -37,4 +37,10 @@ describe.only('reviewer model', () => {
         assert.notEqual(reviewer.hash, password);
     });
 
+    it('compares password to hash', () => {
+        const reviewer = new Reviewer(data);
+        reviewer.generateHash(password);
+        assert.ok(reviewer.comparePassword(password));
+    });
+
 });
