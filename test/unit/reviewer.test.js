@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const Reviewer = require('../../lib/models/Reviewer');
 
-describe('reviewer model', () => {
+describe.only('reviewer model', () => {
     it('reviewer is a valid model', () => {
         const data = {
             name: 'Roger Ebert',
@@ -22,4 +22,19 @@ describe('reviewer model', () => {
         assert.equal(errors.name.kind, 'required');
         assert.equal(errors.company.kind, 'required');
     });
+
+    const data = {
+        email: 'me@me.com'
+    };
+
+    const password = 'abc';
+
+    // let userReviewer = null;
+    it('generates hash from password', () => {
+        const reviewer = new Reviewer(data);
+        reviewer.generateHash(password);
+        assert.ok(reviewer.hash);
+        assert.notEqual(reviewer.hash, password);
+    });
+
 });
