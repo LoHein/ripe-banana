@@ -11,8 +11,6 @@ describe('actor api', () => {
     before(() => dropCollection('films'));
     before(() => dropCollection('reviewers'));
 
-
-
     let data = {
         name: 'Bob',
         dob: '7/18/90',

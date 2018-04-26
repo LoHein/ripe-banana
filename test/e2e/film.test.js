@@ -5,7 +5,6 @@ const { dropCollection } = require('./db');
 const Film = require('../../lib/models/Film');
 const Studio = require('../../lib/models/Studio');
 
-
 describe('film api', () => {
 
     before(() => dropCollection('films'));

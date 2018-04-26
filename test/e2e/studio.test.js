@@ -8,7 +8,6 @@ describe('studio api', () => {
     before(() => dropCollection('studios'));
     before(() => dropCollection('reviewers'));
 
-
     let reviewer = {
         name: 'Bob',
         email: 'me@me.com',

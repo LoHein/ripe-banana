@@ -1,6 +1,6 @@
 const { assert } = require('chai');
 const request = require('./request');
-const { dropCollection, createToken } = require('./db');
+const { dropCollection } = require('./db');
 const { Types } = require('mongoose');
 const Film = require('../../lib/models/Film');
 
