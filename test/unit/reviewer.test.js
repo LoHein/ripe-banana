@@ -5,7 +5,10 @@ describe('reviewer model', () => {
     it('reviewer is a valid model', () => {
         const data = {
             name: 'Roger Ebert',
-            company: 'roger-ebert.com'
+            company: 'roger-ebert.com',
+            email: 'me@me.com',
+            hash: '12ljsdf',
+            roles: ['admin']
         };
 
         const reviewer = new Reviewer(data);
@@ -19,4 +22,25 @@ describe('reviewer model', () => {
         assert.equal(errors.name.kind, 'required');
         assert.equal(errors.company.kind, 'required');
     });
+
+    const data = {
+        email: 'me@me.com'
+    };
+
+    const password = 'abc';
+
+    // let userReviewer = null;
+    it('generates hash from password', () => {
+        const reviewer = new Reviewer(data);
+        reviewer.generateHash(password);
+        assert.ok(reviewer.hash);
+        assert.notEqual(reviewer.hash, password);
+    });
+
+    it('compares password to hash', () => {
+        const reviewer = new Reviewer(data);
+        reviewer.generateHash(password);
+        assert.ok(reviewer.comparePassword(password));
+    });
+
 });

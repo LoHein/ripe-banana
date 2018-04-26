@@ -6,6 +6,17 @@ const Film = require('../../lib/models/Film');
 
 describe('review tests', () => {
     before(() => dropCollection('reviews'));
+    before(() => dropCollection('reviewers'));
+
+    const reviewer = {
+        name: 'Joe',
+        company: 'joereviews.com',
+        email: 'me@me.com',
+        password: 'abc123',
+        role: 'admin'
+    };
+
+    let token = null;
 
     let reviewA = {
         rating: 5,
@@ -27,6 +38,15 @@ describe('review tests', () => {
         cast: [],
     };
 
+    before(() => {
+        return request.post('/api/auth/signup')
+            .send(reviewer)
+            .then(({ body }) => {
+                reviewer._id = body._id;
+                token = body.token;
+            });
+    });
+
     const roundTrip = doc => JSON.parse(JSON.stringify(doc.toJSON()));
 
     before(() => {
@@ -40,6 +60,7 @@ describe('review tests', () => {
 
     it('saves and gets review', () => {
         return request.post('/reviews')
+            .set('Authorization', token)
             .send(reviewA)
             .then(({ body }) => {
                 const { _id, __v, updatedAt, createdAt } = body;

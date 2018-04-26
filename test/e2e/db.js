@@ -1,3 +1,5 @@
+const request = require('./request');
+
 require('dotenv').config({ MONGODB_URI: './test/e2e/.env ' });
 const connect = require('../../lib/connect');
 const mongoose = require('mongoose');
@@ -11,5 +13,12 @@ module.exports = {
             .catch(err => {
                 if(err.codeName !== 'NamespaceNotFound') throw err;
             });
+    },
+
+    createToken(data = { email: 'me@me.com', password: 'abc', company: 'review.com', roles: ['admin'] }) {
+        return request
+            .post('/api/auth/signup')
+            .send(data)
+            .then(res => res.body.token);
     }
 };

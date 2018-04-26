@@ -5,11 +5,11 @@ const { dropCollection } = require('./db');
 const Film = require('../../lib/models/Film');
 const Studio = require('../../lib/models/Studio');
 
-
 describe('film api', () => {
 
     before(() => dropCollection('films'));
     before(() => dropCollection('studios'));
+    before(() => dropCollection('reviewers'));
 
     let studio = {
         name: 'MGM',
@@ -33,6 +33,22 @@ describe('film api', () => {
         released: 2000,
         cast: [{ part: 'vilian', actor: Types.ObjectId() }]
     };
+    
+    const reviewer = {
+        name: 'Joe',
+        company: 'joereviews.com',
+        email: 'me@me.com',
+        password: 'abc123',
+        roles: ['admin']
+    };
+
+    before(() => {
+        return request.post('/api/auth/signup')
+            .send(reviewer)
+            .then(({ body }) => {
+                reviewer._id = body._id;
+            });
+    });
 
     before(() => {
         return Studio.create(studio).then(roundTrip)
@@ -76,5 +92,17 @@ describe('film api', () => {
                 assert.equal(body[0].studio.name, 'MGM');
                 assert.equal(body[1].studio.name, 'MGM');
             });
+    });
+
+    it('deletes film by id', () => {
+        return request.delete(`/films/${filmB._id}`)
+            .set('Authorization', reviewer.roles)
+            .then(() => {
+                return Film.findById(filmB._id);
+            })
+            .then((result) => {
+                assert.isNull(result);
+            });
+
     });
 });

@@ -20,11 +20,11 @@ describe('reviewer api', () => {
         return request.post('/reviewers')
             .send(reviewerA)
             .then(({ body }) => {
-                const { _id, __v } = body;
+                const { _id, __v, roles } = body;
                 assert.ok(_id);
                 assert.deepEqual(body, {
                     ...reviewerA,
-                    _id, __v  
+                    _id, __v, roles 
                 });
                 reviewerA = body;
             });
