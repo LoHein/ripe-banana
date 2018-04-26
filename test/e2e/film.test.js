@@ -98,9 +98,8 @@ describe.only('film api', () => {
     });
 
     it('deletes film by id', () => {
-        // filmB.cast = [];
         return request.delete(`/films/${filmB._id}`)
-            // .set('Authorization', reviewer.roles)
+            .set('Authorization', reviewer.roles)
             .then(() => {
                 return Film.findById(filmB._id);
             })
