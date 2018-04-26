@@ -1,15 +1,13 @@
 const { assert } = require('chai');
 const request = require('./request');
-const { dropCollection, createToken } = require('./db');
+const { dropCollection } = require('./db');
 const Studio = require('../../lib/models/Studio');
 const Film = require('../../lib/models/Film');
 
-describe.only('studio api', () => {
+describe('studio api', () => {
     before(() => dropCollection('studios'));
     before(() => dropCollection('reviewers'));
 
-    // let token = '';
-    // before(() => createToken().then(t => token = t));
 
     let reviewer = {
         name: 'Bob',
@@ -129,8 +127,5 @@ describe.only('studio api', () => {
                         assert.isNull(found);
                     });   
             });
-            // .then(result => {
-            //     assert.equal(result.status, 400);
-            // });
     });
 });
