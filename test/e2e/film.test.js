@@ -6,10 +6,11 @@ const Film = require('../../lib/models/Film');
 const Studio = require('../../lib/models/Studio');
 
 
-describe('film api', () => {
+describe.only('film api', () => {
 
     before(() => dropCollection('films'));
     before(() => dropCollection('studios'));
+    before(() => dropCollection('reviewers'));
 
     let studio = {
         name: 'MGM',
@@ -33,6 +34,24 @@ describe('film api', () => {
         released: 2000,
         cast: [{ part: 'vilian', actor: Types.ObjectId() }]
     };
+    
+    let token = null;
+    const reviewer = {
+        name: 'Joe',
+        company: 'joereviews.com',
+        email: 'me@me.com',
+        password: 'abc123',
+        roles: ['admin']
+    };
+
+    before(() => {
+        return request.post('/api/auth/signup')
+            .send(reviewer)
+            .then(({ body }) => {
+                reviewer._id = body._id;
+                token = body.token;
+            });
+    });
 
     before(() => {
         return Studio.create(studio).then(roundTrip)
@@ -76,5 +95,18 @@ describe('film api', () => {
                 assert.equal(body[0].studio.name, 'MGM');
                 assert.equal(body[1].studio.name, 'MGM');
             });
+    });
+
+    it('deletes film by id', () => {
+        // filmB.cast = [];
+        return request.delete(`/films/${filmB._id}`)
+            // .set('Authorization', reviewer.roles)
+            .then(() => {
+                return Film.findById(filmB._id);
+            })
+            .then((result) => {
+                assert.isNull(result);
+            });
+
     });
 });

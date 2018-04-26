@@ -4,7 +4,7 @@ const { dropCollection, createToken } = require('./db');
 const { Types } = require('mongoose');
 const Film = require('../../lib/models/Film');
 
-describe.only('review tests', () => {
+describe('review tests', () => {
     before(() => dropCollection('reviews'));
     before(() => dropCollection('reviewers'));
 
