@@ -4,12 +4,20 @@ const { dropCollection, createToken } = require('./db');
 const Studio = require('../../lib/models/Studio');
 const Film = require('../../lib/models/Film');
 
-describe('studio api', () => {
+describe.only('studio api', () => {
     before(() => dropCollection('studios'));
     before(() => dropCollection('reviewers'));
 
-    let token = '';
-    before(() => createToken().then(t => token = t));
+    // let token = '';
+    // before(() => createToken().then(t => token = t));
+
+    let reviewer = {
+        name: 'Bob',
+        email: 'me@me.com',
+        company: 'thebob.com',
+        password: 'abc',
+        roles: ['admin']
+    };
 
     let studioA = {
         name: 'StudioA',
@@ -35,6 +43,22 @@ describe('studio api', () => {
         released: 1977,
         cast: []
     };
+
+    const checkOk = res => {
+        if(!res.ok) throw res.error;
+        return res;
+    };
+
+    before(() => {
+        return request.post('/api/auth/signup')
+            .send(reviewer)
+            .then(checkOk)
+            .then(({ body }) => {
+                reviewer._id = body._id;
+
+                assert.ok(body.roles);
+            });
+    });
 
     it('saves and gets studio', () => {
         return request.post('/studios')
@@ -74,11 +98,10 @@ describe('studio api', () => {
             });
     });
 
-    it('update a studio', () => {
+    it.skip('update a studio', () => {
         studioA.name = 'New name';
 
         return request.put(`/studios/${studioA._id}`)
-            .set('Authorization', token)
             .send(studioA)
             .then(({ body }) => {
                 assert.deepEqual(body, studioA);
@@ -96,10 +119,17 @@ describe('studio api', () => {
                 starWars = saved;
             })
             .then(() => {  
-                return request.delete(`/studios/${studioB._id}`);    
-            })
-            .then(result => {
-                assert.equal(result.status, 400);
+                return request.delete(`/studios/${studioB._id}`)
+                    .set('Authorization', reviewer.roles)
+                    .then(() => {
+                        return Studio.findById(studioB._id);
+                    })
+                    .then(found => {
+                        assert.isNull(found);
+                    });   
             });
+            // .then(result => {
+            //     assert.equal(result.status, 400);
+            // });
     });
 });
