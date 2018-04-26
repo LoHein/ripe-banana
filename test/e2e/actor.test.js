@@ -9,6 +9,9 @@ describe('actor api', () => {
 
     before(() => dropCollection('actors'));
     before(() => dropCollection('films'));
+    before(() => dropCollection('reviewers'));
+
+
 
     let data = {
         name: 'Bob',
@@ -21,6 +24,22 @@ describe('actor api', () => {
         dob: '5/5/50',
         pob: 'Salem'
     };
+
+    const reviewer = {
+        name: 'Joe',
+        company: 'joereviews.com',
+        email: 'me@me.com',
+        password: 'abc123',
+        roles: ['admin']
+    };
+
+    before(() => {
+        return request.post('/api/auth/signup')
+            .send(reviewer)
+            .then(({ body }) => {
+                reviewer._id = body._id;
+            });
+    });
  
     it('saves and gets actor', () => {
         return request.post('/actors')
@@ -71,6 +90,7 @@ describe('actor api', () => {
 
     it('deletes actor by id', () => {
         return request.delete(`/actors/${data._id}`)
+            .set('Authorization', reviewer.roles)
             .then(() => {
                 return Actor.findById(data._id);
             })
@@ -83,6 +103,7 @@ describe('actor api', () => {
         actor.name = 'William';
 
         return request.put(`/actors/${actor._id}`)
+            .set('Authorization', reviewer.roles)
             .send(actor)
             .then(({ body }) => {
                 assert.deepEqual(body, actor);
@@ -102,7 +123,8 @@ describe('actor api', () => {
                 film = saved;
             })
             .then(() => {
-                return request.delete(`/actors/${actor._id}`);
+                return request.delete(`/actors/${actor._id}`)
+                    .set('Authorization', reviewer.roles);
             })
             .then(result => {
                 assert.equal(result.status, 400);

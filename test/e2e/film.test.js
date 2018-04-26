@@ -6,7 +6,7 @@ const Film = require('../../lib/models/Film');
 const Studio = require('../../lib/models/Studio');
 
 
-describe.only('film api', () => {
+describe('film api', () => {
 
     before(() => dropCollection('films'));
     before(() => dropCollection('studios'));
@@ -35,7 +35,6 @@ describe.only('film api', () => {
         cast: [{ part: 'vilian', actor: Types.ObjectId() }]
     };
     
-    let token = null;
     const reviewer = {
         name: 'Joe',
         company: 'joereviews.com',
@@ -49,7 +48,6 @@ describe.only('film api', () => {
             .send(reviewer)
             .then(({ body }) => {
                 reviewer._id = body._id;
-                token = body.token;
             });
     });
 
