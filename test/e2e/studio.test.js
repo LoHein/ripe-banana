@@ -98,6 +98,7 @@ describe.only('studio api', () => {
             });
     });
 
+    //put not required for lab
     it.skip('update a studio', () => {
         studioA.name = 'New name';
 
@@ -113,7 +114,7 @@ describe.only('studio api', () => {
     });
 
     it('deletes a studio', () => {
-        starWars.studio = studioB._id;
+        starWars.studio = studioA._id;
         return Film.create(starWars).then(roundTrip)
             .then(saved => {
                 starWars = saved;
